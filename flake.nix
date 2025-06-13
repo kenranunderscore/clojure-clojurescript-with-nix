@@ -29,7 +29,10 @@
         {
           formatter = pkgs.nixfmt-rfc-style;
           devShells.default = pkgs.mkShell {
-            packages = [ pkgs.clojure ];
+            packages = [
+              pkgs.clojure
+              pkgs.nodejs
+            ];
           };
         };
     };

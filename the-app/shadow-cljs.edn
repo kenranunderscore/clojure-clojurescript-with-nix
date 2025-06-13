@@ -1,0 +1,9 @@
+{:source-paths ["src"]
+
+ :dependencies [[reagent "1.3.0"]]
+
+ :builds
+ {:frontend {:target :browser
+             :output-dir "public/app/js"
+             :asset-path "/app/js"
+             :modules {:main {:init-fn example.frontend.app/run}}}}}
