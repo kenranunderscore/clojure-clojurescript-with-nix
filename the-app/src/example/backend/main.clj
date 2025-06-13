@@ -2,11 +2,12 @@
   (:require [ring.adapter.jetty :as jetty]
             [ring.middleware.resource :as resource]
             [ring.middleware.content-type :as content-type]
-            [ring.middleware.not-modified :as not-modified]))
+            [ring.middleware.not-modified :as not-modified])
+  (:gen-class))
 
 (def app
   (-> (fn [_request] {:status 404})
-      (resource/wrap-resource ".")
+      (resource/wrap-resource "/")
       (content-type/wrap-content-type)
       (not-modified/wrap-not-modified)))
 
