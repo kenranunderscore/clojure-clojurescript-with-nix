@@ -1,5 +1,8 @@
 .clj-kondo/
+.clj/
 .cpcache/
+.gitlibs/
 .lsp/
+.m2/
 .shadow-cljs/
 node_modules/

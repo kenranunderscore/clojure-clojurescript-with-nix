@@ -2,6 +2,8 @@
 
  :dependencies [[reagent "1.3.0"]]
 
+ :maven {:local-repo ".m2/repository"}
+
  :builds
  {:frontend {:target :browser
              :output-dir "public/app/js"
