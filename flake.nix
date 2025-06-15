@@ -4,16 +4,19 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    clj-nix = {
+      url = "github:jlesquembre/clj-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
     {
       self,
       nixpkgs,
-      flake-parts,
       ...
     }@inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } {
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "x86_64-linux"
         "x86_64-darwin"
@@ -24,11 +27,37 @@
       perSystem =
         { system, inputs', ... }:
         let
-          pkgs = inputs'.nixpkgs.legacyPackages;
+          pkgs = import inputs.nixpkgs {
+            inherit system;
+            overlays = [ inputs.clj-nix.overlays.default ];
+          };
+          inherit (pkgs) lib;
           appRoot = "the-app";
+          appSrc = ./. + "/${appRoot}";
+          npmDeps = pkgs.importNpmLock.buildNodeModules {
+            npmRoot = appSrc;
+            inherit (pkgs) nodejs;
+          };
         in
         {
           formatter = pkgs.nixfmt-rfc-style;
+
+          packages = {
+            default = pkgs.callPackage ./nix/the-app.nix;
+            lock-clojure-deps = pkgs.writeShellScriptBin "lock-clojure-deps" ''
+              cd ${appRoot}
+              tmpdeps=$(mktemp --tmpdir)
+              cat deps.edn >"$tmpdeps"
+              ${lib.getExe pkgs.gnused} 's|:mvn/local-repo.*$||' -i "$tmpdeps"
+              ${lib.getExe inputs'.clj-nix.packages.deps-lock} --deps-include "$tmpdeps"
+            '';
+            the-app = pkgs.callPackage ./nix/the-app.nix {
+              inherit npmDeps;
+              src = appSrc;
+              cljDeps = inputs'.clj-nix.packages.mk-deps-cache { lockfile = appSrc + /deps-lock.json; };
+            };
+          };
+
           devShells.default = pkgs.mkShell {
             packages = [
               pkgs.clojure
@@ -50,10 +79,7 @@
             # called from the root/flake directory (which, for instance,
             # `direnv` does by default).
             npmRoot = appRoot;
-            npmDeps = pkgs.importNpmLock.buildNodeModules {
-              npmRoot = ./. + "/${appRoot}";
-              inherit (pkgs) nodejs;
-            };
+            inherit npmDeps;
           };
         };
     };

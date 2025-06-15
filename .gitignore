@@ -6,3 +6,5 @@
 .m2/
 .shadow-cljs/
 node_modules/
+
+/result*

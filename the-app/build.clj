@@ -24,7 +24,6 @@
 
 (defn uber [_]
   (clean nil)
-  (process {:command-args ["npm" "install"]})
   (process {:command-args ["npx" "shadow-cljs" "release" "frontend"]})
   (b/copy-dir {:src-dirs ["public"]
                :target-dir class-dir})
