@@ -1,8 +1,7 @@
-{:source-paths ["src"]
+{:maven {:local-repo ".m2/repository"}
 
- :dependencies [[reagent "1.3.0"]]
-
- :maven {:local-repo ".m2/repository"}
+ ;; let tools.deps manage dependencies in deps.edn
+ :deps {:aliases [:frontend]}
 
  :builds
  {:frontend {:target :browser
