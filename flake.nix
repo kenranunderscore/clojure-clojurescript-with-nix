@@ -5,7 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     clj-nix = {
-      url = "github:jlesquembre/clj-nix";
+      url = "github:kenranunderscore/clj-nix/symlink-clojure-deps";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -43,7 +43,18 @@
           formatter = pkgs.nixfmt-rfc-style;
 
           packages = {
-            default = pkgs.callPackage ./nix/the-app.nix;
+            default = inputs'.clj-nix.packages.mkCljBin {
+              name = "example/example";
+              main-ns = "example.backend.main";
+              projectSrc = appSrc;
+              lockfile = appSrc + /deps-lock.json;
+              symlinkDeps = true;
+              nativeBuildInputs = [ pkgs.nodejs ];
+              buildCommand = ''
+                ln -s ${npmDeps}/node_modules .
+                clj -T:build uber
+              '';
+            };
             lock-clojure-deps = pkgs.writeShellScriptBin "lock-clojure-deps" ''
               cd ${appRoot}
               tmpdeps=$(mktemp --tmpdir)
@@ -51,11 +62,6 @@
               ${lib.getExe pkgs.gnused} 's|:mvn/local-repo.*$||' -i "$tmpdeps"
               ${lib.getExe inputs'.clj-nix.packages.deps-lock} --deps-include "$tmpdeps"
             '';
-            the-app = pkgs.callPackage ./nix/the-app.nix {
-              inherit npmDeps;
-              src = appSrc;
-              cljDeps = inputs'.clj-nix.packages.mk-deps-cache { lockfile = appSrc + /deps-lock.json; };
-            };
           };
 
           devShells.default = pkgs.mkShell {

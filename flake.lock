@@ -9,15 +9,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1747498738,
-        "narHash": "sha256-SycxFGoyDFv6NvhjsO6Uwm+hZMh87dA4Y12FoiNqrUA=",
-        "owner": "jlesquembre",
+        "lastModified": 1749981666,
+        "narHash": "sha256-thm9uAeafE+CZ/GL5tehl+g+hUmymaXdU3+/w1SVElw=",
+        "owner": "kenranunderscore",
         "repo": "clj-nix",
-        "rev": "b1793087d85c6db4b92a56a5d93b6d62036d1653",
+        "rev": "c33214ab93bc474059bb0a93c4d7d8e656b0c406",
         "type": "github"
       },
       "original": {
-        "owner": "jlesquembre",
+        "owner": "kenranunderscore",
+        "ref": "symlink-clojure-deps",
         "repo": "clj-nix",
         "type": "github"
       }
