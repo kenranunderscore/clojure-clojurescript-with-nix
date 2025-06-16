@@ -58,8 +58,12 @@
             lock-clojure-deps = pkgs.writeShellScriptBin "lock-clojure-deps" ''
               cd ${appRoot}
               tmpdeps=$(mktemp --tmpdir)
-              cat deps.edn >"$tmpdeps"
-              ${lib.getExe pkgs.gnused} 's|:mvn/local-repo.*$||' -i "$tmpdeps"
+              ${lib.getExe pkgs.babashka} -e '
+                (-> (slurp "deps.edn")
+                    (rewrite-clj.zip/of-string)
+                    (rewrite-clj.zip/edit #(dissoc % :mvn/local-repo))
+                    (rewrite-clj.zip/root-string)
+                    (#(spit (first *command-line-args*) %)))' "$tmpdeps"
               ${lib.getExe inputs'.clj-nix.packages.deps-lock} --deps-include "$tmpdeps"
             '';
           };
