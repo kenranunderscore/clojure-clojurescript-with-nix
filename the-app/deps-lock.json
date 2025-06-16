@@ -2062,14 +2062,14 @@
       "hash": "sha256-F+iii6ZBWeGqI7lm1AlejvFgsxyV+tUILX6gxQk7woM="
     },
     {
-      "mvn-path": "thheller/shadow-cljs/2.28.18/shadow-cljs-2.28.18.jar",
+      "mvn-path": "thheller/shadow-cljs/2.28.20/shadow-cljs-2.28.20.jar",
       "mvn-repo": "https://repo.clojars.org/",
-      "hash": "sha256-aEkjTZ5PsM/jjiuOkHmk+9KBR0keTr17eY6uzWZZZmU="
+      "hash": "sha256-mX+tOlLpqPp89CgVkeEzGzqD3BHl6ADAbK4GmGMfY24="
     },
     {
-      "mvn-path": "thheller/shadow-cljs/2.28.18/shadow-cljs-2.28.18.pom",
+      "mvn-path": "thheller/shadow-cljs/2.28.20/shadow-cljs-2.28.20.pom",
       "mvn-repo": "https://repo.clojars.org/",
-      "hash": "sha256-DUvejtIojMxW9bbIwbXbKotS+kovjuzWDMOdLXx7OUk="
+      "hash": "sha256-y2WaWRAPk4i1xoih0YfiPdTw/zhK7r13XDPh8P9Q/EU="
     },
     {
       "mvn-path": "thheller/shadow-cljsjs/0.0.22/shadow-cljsjs-0.0.22.jar",

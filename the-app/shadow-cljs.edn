@@ -1,7 +1,5 @@
-{:maven {:local-repo ".m2/repository"}
-
- ;; let tools.deps manage dependencies in deps.edn
- :deps {:aliases [:frontend]}
+{:deps
+ {:aliases [:frontend]}
 
  :builds
  {:frontend {:target :browser

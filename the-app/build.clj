@@ -22,9 +22,26 @@
       (println "Process failed:" process-result)
       (System/exit exit))))
 
+(defn- shadow-cljs
+  "Call shadow-cljs and perform `task` on the frontend code."
+  [task]
+  (let [frontend-basis (b/create-basis
+                        {:project "deps.edn"
+                         :aliases [:frontend]})]
+    (process (b/java-command
+              {:basis frontend-basis
+               :main 'clojure.main
+               :main-args ["-m"
+                           "shadow.cljs.devtools.cli"
+                           (str task)
+                           "frontend"]}))))
+
+(defn watch [_]
+  (shadow-cljs "watch"))
+
 (defn uber [_]
   (clean nil)
-  (process {:command-args ["npx" "shadow-cljs" "release" "frontend"]})
+  (shadow-cljs "release")
   (b/copy-dir {:src-dirs ["public"]
                :target-dir class-dir})
   (b/compile-clj {:basis @basis
