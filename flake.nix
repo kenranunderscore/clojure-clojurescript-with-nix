@@ -49,11 +49,12 @@
               projectSrc = appSrc;
               lockfile = appSrc + /deps-lock.json;
               symlinkDeps = true;
-              nativeBuildInputs = [ pkgs.nodejs ];
-              buildCommand = ''
-                ln -s ${npmDeps}/node_modules .
-                clj -T:build uber
-              '';
+              inherit npmDeps;
+              nativeBuildInputs = [
+                pkgs.nodejs
+                pkgs.importNpmLock.linkNodeModulesHook
+              ];
+              buildCommand = "clj -T:build uber";
             };
             lock-clojure-deps = pkgs.writeShellScriptBin "lock-clojure-deps" ''
               cd ${appRoot}
